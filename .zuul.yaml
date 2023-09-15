@@ -6,8 +6,14 @@
     run: playbooks/managerless/deploy.yml
     post-run: playbooks/managerless/post.yml
     cleanup-run: playbooks/managerless/cleanup.yml
-    timeout: 10800
-
+    timeout: 16200
+    required-projects:
+      - osism/ansible-collection-commons
+      - osism/ansible-collection-services
+      - opentelekomcloud-scs/terraform-base
+      - opentelekomcloud-scs/testbed
+    vars:
+      terraform_blueprint: testbed-managerless
 - project:
     merge-mode: squash-merge
     default-branch: main

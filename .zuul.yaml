@@ -1,7 +1,17 @@
 ---
+- job:
+    name: testbed-deploy-managerless
+    nodeset: ubuntu-jammy
+    pre-run: playbooks/managerless/pre.yml
+    run: playbooks/managerless/deploy.yml
+    post-run: playbooks/managerless/post.yml
+    cleanup-run: playbooks/managerless/cleanup.yml
+    timeout: 10800
+
 - project:
     merge-mode: squash-merge
     default-branch: main
     check:
       jobs:
         - yamllint
+        - testbed-deploy-managerless

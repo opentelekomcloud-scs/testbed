@@ -5,3 +5,41 @@
     check:
       jobs:
         - yamllint
+        - flake8
+    label:
+      jobs:
+        - testbed-deploy
+        - testbed-deploy-ceph
+        - testbed-deploy-stable
+        - testbed-update-stable
+        - testbed-upgrade
+        - testbed-upgrade-ceph
+        - testbed-upgrade-stable
+    gate:
+      jobs:
+        - ansible-lint
+        - yamllint
+        - flake8
+        - testbed-deploy:
+            branches: main
+        - testbed-deploy-stable:
+            branches: main
+    post:
+      jobs:
+        - testbed-deploy-stable
+    periodic-daily:
+      jobs:
+        - testbed-deploy
+        - testbed-deploy-cleura
+        - testbed-deploy-pco
+        - testbed-deploy-stable
+        - testbed-deploy-wavestack
+        - testbed-update-stable
+        - testbed-upgrade
+        - testbed-upgrade-cleura
+        - testbed-upgrade-pco
+        - testbed-upgrade-stable
+        - testbed-upgrade-wavestack
+        - ansible-lint
+        - yamllint
+        - flake8

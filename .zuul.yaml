@@ -69,7 +69,7 @@
 - job:
     name: testbed-deploy-managerless
     parent: base-extra-logs
-    nodeset: ubuntu-jammy-large
+    nodeset: ubuntu-jammy
     pre-run: playbooks/managerless/pre.yml
     run: playbooks/managerless/deploy.yml
     post-run: playbooks/managerless/post.yml

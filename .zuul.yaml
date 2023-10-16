@@ -54,8 +54,8 @@
     required-projects:
       - osism/ansible-collection-commons
       - osism/ansible-collection-services
-      - osism/testbed
-      - osism/terraform-base
+      - opentelekomcloud-scs/testbed
+      - opentelekomcloud-scs/terraform-base
     irrelevant-files:
       - ^LICENSE$
       - ^README.md$
@@ -74,7 +74,7 @@
     run: playbooks/managerless/deploy.yml
     post-run: playbooks/managerless/post.yml
     required-projects:
-      - osism/terraform-base
+      - opentelekomcloud-scs/terraform-base
     timeout: 10800
     vars:
       terraform_blueprint: testbed-managerless

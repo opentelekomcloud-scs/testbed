@@ -37,4 +37,3 @@ getting started with the testbed after full deployment.
 ## Zuul job results
 
 https://zuul.services.betacloud.xyz/t/osism/builds?project=osism%2Ftestbed&skip=0
-

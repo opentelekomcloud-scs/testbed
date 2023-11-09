@@ -4,6 +4,23 @@
 
   vars:
     stage_dir: "{{ ansible_user_dir }}/zuul-output"
+    terraform_path: "{{ zuul.project.src_dir }}/terraform"
 
   roles:
     - stage-output
+
+  tasks:
+    - name: Write clouds.yaml file
+      ansible.builtin.copy:
+        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
+        dest: "{{ terraform_path }}/clouds.yaml"
+        mode: 0600
+      no_log: true
+
+    - name: Clean the cloud environment
+      ansible.builtin.shell:
+        cmd: |
+          OS_CLOUD={{ cloud_env }} python3 scripts/cleanup.py
+        chdir: "{{ terraform_path }}"
+      failed_when: false
+      changed_when: true

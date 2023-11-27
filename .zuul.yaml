@@ -46,7 +46,7 @@
     post:
       jobs:
         - testbed-deploy-managerless
-    periodic-half-hourly-otc:
+    periodic-hourly-otc:
       jobs:
         - testbed-deploy-in-a-nutshell
         - testbed-deploy-managerless

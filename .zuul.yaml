@@ -3,16 +3,16 @@
     name: SECRET_TESTBED
     data:
       MANAGERLESS_CREDENTIALS: !encrypted/pkcs1-oaep
-        - bO64XOE4Kp7QHYTKtfglNOb5AKyrjrZBxTU6kUKEdubpLfw+esnOJeCJhFPCHpM1fqVnW
-          tgDItSDylvUl/QRYJvoRbNwMg/cDtLprSC2bRVwUdFDspyfIbJgvzOR/xXTne+kt669U4
-          97rzRuE/+v/iwibmGG5cxd1kdhNH1fr/SuBhL71nzPDxc8NFqdNXAyLCc7778fgQxlWJ2
-          q6fORFSl/u0qe1hG+PbpAPu9M5VzrQuub1owIfeYFL4d4aHYIFZTmo10IAH/ZwwpPhppZ
-          KP2VpQ7MJiQF+5SUQn41kr3Yz5LNmKwoQnHlg4M41iTwLet1ywZImPHovE+oeWI/o6aGW
-          aiyputgos5kAdpFrk9Gbk/XaUBx4wwymfUXpEr0iwuYU355poVKTizARVMT2sXgmngJOO
-          34p1UqaOVIJgIR4f/4t0g/bqdhZ5gZl0899U6hCOKgLit0hIq4tqBVJaj6NfLFeu5rmWk
-          PSIcrPfC2Uidm9ScxoROthIGuH6IQI9yEDJJeu6ilaxT05zUK0cJfudS3DTgiS7xi4WVC
-          wOGFj3DlmJ6CiCVXiaSvNIYULz6gMBcHSTnma+1hm2aUcrF6eoOdAwiNl6qp4+pmkKaJu
-          tiQco0DrJncvqhRNiNNBFJbipoDl2r28W2kSWnobr2mo4Jb7crUaS1jDxh5q1o=
+        - C1cOatGA837DORobPx+rYJCexmOpLmsPnTVlbuQIXCn/lnBSx3VLI4Tdtw6NxOau6Q2gg
+          TFmp6L/yYkc3KSdKRgakL2mMdPk7NkDTIU+qyF7l+2eBeq/kzaxXMrgTJ4/cBEpZZSTG7
+          zybKIcWIR5r6rqqeQFO3q9i2C3i9XKimgvhnb2J/UYbCQj4VLaxq3+jCuL66oc+sPED9w
+          CSa1+/8S0WK0HhRWTdfdVYyiS0EdDpVEOfffgHV54qReZAqA3hetSrOukHisMJbMeYyBV
+          wJcZEquHOUls0Pz8yOhebazFAsybNODtr9NPdjfLniKccl6p+VWQd9zrListPkoxATsvo
+          xhmT4TnFFMriTRtr5gLP/+ikfu47gWS6KNAmqse8Ek/ily2f9UJEoLlCtjRx+Z1ErVZED
+          5wu6+TZJ5JWVBc/WyaTouIUUtuWgLmbHc7rA3plE5FR2onfWPsH1oMgZwhioZM3zySvvT
+          FExr+M4PA7Y4PhwFpW17XQzljaXXTbrysefqOzYAY8BuIhLWFOMAdjCcAsxisE4PBm3Gq
+          B46x3VKlfS6YWil3jTy7ChRaHHIfE7A9FwDhTlH66ikgal5IJWo6ph4WiGlynhT735jK8
+          9CSiKzZrqSbeVpeHHzCuw6noqHk93y1qjbknStd5cHLCzxh2Il8ebHb+z9bI8w=
 
 - semaphore:
     name: semaphore-testbed-managerless
@@ -45,8 +45,7 @@
         - ansible-lint
     post:
       jobs:
-         - noop
-#        - testbed-deploy-managerless
+        - testbed-deploy-managerless
     periodic-hourly-otc:
       jobs:
         - ansible-lint

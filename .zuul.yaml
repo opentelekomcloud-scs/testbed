@@ -49,6 +49,6 @@
       jobs:
         - ansible-lint
         - flake8
-#        - testbed-deploy-managerless
+        - testbed-deploy-managerless
 #        - python-black
 #        - yamllint

@@ -3,16 +3,16 @@
     name: SECRET_TESTBED
     data:
       MANAGERLESS_CREDENTIALS: !encrypted/pkcs1-oaep
-        - C1cOatGA837DORobPx+rYJCexmOpLmsPnTVlbuQIXCn/lnBSx3VLI4Tdtw6NxOau6Q2gg
-          TFmp6L/yYkc3KSdKRgakL2mMdPk7NkDTIU+qyF7l+2eBeq/kzaxXMrgTJ4/cBEpZZSTG7
-          zybKIcWIR5r6rqqeQFO3q9i2C3i9XKimgvhnb2J/UYbCQj4VLaxq3+jCuL66oc+sPED9w
-          CSa1+/8S0WK0HhRWTdfdVYyiS0EdDpVEOfffgHV54qReZAqA3hetSrOukHisMJbMeYyBV
-          wJcZEquHOUls0Pz8yOhebazFAsybNODtr9NPdjfLniKccl6p+VWQd9zrListPkoxATsvo
-          xhmT4TnFFMriTRtr5gLP/+ikfu47gWS6KNAmqse8Ek/ily2f9UJEoLlCtjRx+Z1ErVZED
-          5wu6+TZJ5JWVBc/WyaTouIUUtuWgLmbHc7rA3plE5FR2onfWPsH1oMgZwhioZM3zySvvT
-          FExr+M4PA7Y4PhwFpW17XQzljaXXTbrysefqOzYAY8BuIhLWFOMAdjCcAsxisE4PBm3Gq
-          B46x3VKlfS6YWil3jTy7ChRaHHIfE7A9FwDhTlH66ikgal5IJWo6ph4WiGlynhT735jK8
-          9CSiKzZrqSbeVpeHHzCuw6noqHk93y1qjbknStd5cHLCzxh2Il8ebHb+z9bI8w=
+        - NKkIlmAdinWbRT4uPfVkYclu18Ylapc9AqxYxuU3/wv5BEshpxTOc4MXhW0vCwhmc4r3/
+          b/xRP5iNv6Z06lSoNzfWmOvrYM6JUd31s2AXbwO2jjkQ2pAmq4Kj0IT5rtnMFpK4avPsB
+          +1Q/b2PIuvVWmkq4CbyWDZgJDmH0UhisLpGUVZ2TiPAWc5AB9V1814jfI/nYaVzwvBfBB
+          Uoh3nlhvhoPVAiCxwnX+htaEeXFI1+dN7p23EZglJKDNeEaT61obt36iGbo9Y833UVW4F
+          RKDfcg7YygtqWvGzLHwuxVYPcCnZuLtlU4u8F6R8RN//PNDtcMvsb1uAjHwl0LluLj93q
+          LLriOWb/qvpZKqAOHG0YfaYlEKZrWXXLc8zfA/iFzkWy/iDzRQk61fcEBoJ98JSVXqhDt
+          L0WQ0Rv0Y2/jAW+eOJW0HOv+NDXHHlVuhxEPBXeNurauGoy+DeoL8UEh3LakvNkr59M+H
+          194xrSzmu4LPpmN0DUJ2ddb3An9Px03mHZV+IRL2GT0t/nT3bpo4Nvt6QpNjNzjYfcCOI
+          RIazEWyOABbaACx7hwCJeiivtnl/GSu12lkCInHhVZS4l64Ljl47qCrpKBU93EoNwfFjS
+          evIXLpLR27vjKD/cpwuMefRRRXw3xSK9F863wLqvlvMPY/7WIY9JjBpcDhTtpU=
 
 - semaphore:
     name: semaphore-testbed-managerless

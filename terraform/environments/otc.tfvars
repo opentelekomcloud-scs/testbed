@@ -5,11 +5,11 @@
 # override:manager_boot_from_volume
 # override:neutron_router_enable_snat
 # override:nodes_boot_from_volume
-availability_zone         = "eu-de-02"
-volume_availability_zone  = "eu-de-02"
-network_availability_zone = "eu-de-02"
-flavor_node               = "d2.4xlarge.8"
-flavor_manager            = "d2.xlarge.8"
+availability_zone         = "eu-de-01"
+volume_availability_zone  = "eu-de-01"
+network_availability_zone = "eu-de-01"
+flavor_node               = "d2.4xlarge.8_nested"
+flavor_manager            = "d2.4xlarge.8_nested"
 image                     = "Standard_Ubuntu_22.04_latest"
 image_node                = "Standard_Ubuntu_22.04_latest"
 volume_size_storage       = "10"

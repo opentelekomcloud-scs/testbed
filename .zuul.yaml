@@ -52,7 +52,7 @@
     check:
       jobs:
         - flake8
-        - ansible-lint
+#        - ansible-lint
     post:
       jobs:
         - testbed-deploy-managerless

@@ -27,7 +27,7 @@
 - semaphore:
     name: semaphore-testbed-managerless
     max: 1
-
+ 
 - job:
     name: testbed-deploy-managerless
     nodeset: ubuntu-jammy

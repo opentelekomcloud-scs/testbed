@@ -27,10 +27,10 @@
 - semaphore:
     name: semaphore-testbed-managerless
     max: 1
- 
+
 - job:
     name: testbed-deploy-managerless
-    nodeset: ubuntu-jammy
+    nodeset: ubuntu-jammy-container
     pre-run: playbooks/managerless/pre.yml
     run: playbooks/managerless/deploy.yml
     post-run: playbooks/managerless/post.yml

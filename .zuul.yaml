@@ -20,7 +20,7 @@
 
 - job:
     name: testbed-deploy-managerless
-    nodeset: ubuntu-jammy-container
+    nodeset: ubuntu-jammy
     pre-run: playbooks/managerless/pre.yml
     run: playbooks/managerless/deploy.yml
     post-run: playbooks/managerless/post.yml

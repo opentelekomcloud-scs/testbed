@@ -84,6 +84,8 @@
     check:
       jobs:
         - flake8
+    check-post:
+      jobs:
         - testbed-deploy
     post:
       jobs:

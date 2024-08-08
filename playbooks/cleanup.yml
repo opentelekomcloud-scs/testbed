@@ -10,6 +10,14 @@
     basepath: "{{ ansible_user_dir }}/src/{{ repositories['testbed']['path'] }}"
 
   tasks:
+    - name: debug
+      ansible.builtin.debug:
+        msg:
+          groups_all: "{{ groups['all'] }}"
+          hostvars_first: "{{ hostvars[groups['all'][0]] }}"
+          nodepool_exists: "{{ 'nodepool' in hostvars[groups['all'][0]] }}"
+          nodepool_label: "{{ hostvars[groups['all'][0]].get('nodepool', {}).get('label', 'undefined') }}"
+
     - name: Set cloud_env fact (Zuul deployment)
       ansible.builtin.set_fact:
         cloud_env: "{{ cloud_envs[hostvars[groups['all'][0]]['nodepool']['label']] }}"

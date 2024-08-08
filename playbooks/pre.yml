@@ -74,6 +74,6 @@
 
     - name: Write clouds-public.yaml file
       ansible.builtin.copy:
-        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
+        content: "{{ secret.PUBLICCLOUDS }}"
         dest: "{{ terraform_path }}/clouds-public.yaml"
         mode: 0600

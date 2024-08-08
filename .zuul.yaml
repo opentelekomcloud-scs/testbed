@@ -13,6 +13,17 @@
           4ODmMkP9waTb46OaI4aMVwfwWQQnlfRRMKbxH1lQONNyomH2OVEeUkaFx8u13Dx3bNkIc
           v67ut7/VSN7YMSPwz/vntpRxhEkx+A2SnKueDHvyn5J+3RLYnT1KeKZ5CWkPjGsqdgo3K
           jn0ELHJsqUvP+NHiz3cdi32vnBl/o8Fu9u5SwvRJV97Nj/6eXlRAqckAj9kTMg=
+      PUBLICCLOUDS: !encrypted/pkcs1-oaep
+        - xUNLeryZnS7WOQpNQyko0M9zIBcGR5q62AsKprNXGhuGhZn4g4booqH9Xo6ilrVUBvs6A
+          lNfRtAoBycTAwVwsjkB0q1YBhhVVkt2ZH6MMB6MLTsId+gyR1+YDJyJwXCeO4eG9uSX/I
+          Ac1HRy6YrTlFtnt4b6nLWpcGdqj5uI1vgnn0PZOrlwOqQ25QTGO5jqIoOMtupdPJNQWmX
+          mZI6uug2NbtSQg+ye/Ak0g5NxFFOWAxJkQHtWwBub26w0S8jbjNUGfymtsgU61FSSWlI4
+          NaZgnJcwFyFFl0r/wH7wyc17aXZhG9pF0EltzIC15FSN7L4gVdefMP0H4rVSuMFa/h05Q
+          wZvweNWEico2DdAtW1qqdLKT0Ozj0pSPNyH+AiSaALOGjwYV32S82dtOoBlEl8rAoRxJg
+          1Q2yoaU4hUebbLwfgRZRJOQTe9V41aMrJwO79Huf/YZdF7O146FHRtMjSu8titWFf4RyO
+          eTGycbiNOCblOA5zPdoHdzDcZbwq6qpkoe17Zlya0wNn1Sw2s8KhkYeRgFoEsj6sJ3usR
+          0sAcVGVjthqwIJyqp3pkph7WA+Z7eKN4JzO9uv8w7pb6BAKAqf3vVGlO6IeFUQ2tu4GLN
+          m1K44JWu1x0LqCwFDdVV6IL93V2vJQ+GFbXBNMMAezeVkMFwdz+BPN072miT1M=
 
 - semaphore:
     name: semaphore-testbed-managerless

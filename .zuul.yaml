@@ -48,7 +48,7 @@
         - testbed-deploy-managerless
     periodic-hourly-otc:
       jobs:
-        - ansible-lint
+        # - ansible-lint
         - flake8
 #        - testbed-deploy-managerless
 #        - python-black

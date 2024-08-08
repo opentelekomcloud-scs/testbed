@@ -46,6 +46,25 @@
     nodeset: ubuntu-jammy
     pre-run: playbooks/pre.yml
     run: playbooks/deploy.yml
+    # post-run: playbooks/post.yml
+    cleanup-run: playbooks/cleanup.yml
+    required-projects:
+      - osism/terraform-base
+    timeout: 10800
+    vars:
+      terraform_blueprint: testbed-default
+      cloud_env: managerless-otc
+    secrets:
+      - name: secret
+        secret: SECRET_TESTBED
+    semaphores:
+      - name: semaphore-testbed
+
+- job:
+    name: testbed-deploy-post
+    nodeset: ubuntu-jammy
+    pre-run: playbooks/pre.yml
+    run: playbooks/deploy.yml
     post-run: playbooks/post.yml
     cleanup-run: playbooks/cleanup.yml
     required-projects:
@@ -65,10 +84,10 @@
     check:
       jobs:
         - flake8
-#        - ansible-lint
+        - testbed-deploy
     post:
       jobs:
-        - testbed-deploy
+        - testbed-deploy-post
     periodic-hourly-otc:
       jobs:
         # - ansible-lint

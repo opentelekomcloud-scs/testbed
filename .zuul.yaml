@@ -18,6 +18,10 @@
     name: semaphore-testbed-managerless
     max: 1
 
+- semaphore:
+    name: semaphore-testbed
+    max: 1
+
 - job:
     name: testbed-deploy-managerless
     nodeset: ubuntu-jammy
@@ -37,6 +41,25 @@
     semaphores:
       - name: semaphore-testbed-managerless
 
+- job:
+    name: testbed-deploy
+    nodeset: ubuntu-jammy
+    pre-run: playbooks/pre.yml
+    run: playbooks/deploy.yml
+    post-run: playbooks/post.yml
+    cleanup-run: playbooks/cleanup.yml
+    required-projects:
+      - osism/terraform-base
+    timeout: 10800
+    vars:
+      terraform_blueprint: testbed-default
+      cloud_env: managerless-otc
+    secrets:
+      - name: secret
+        secret: SECRET_TESTBED
+    semaphores:
+      - name: semaphore-testbed
+
 - project:
     merge-mode: squash-merge
     check:
@@ -45,7 +68,7 @@
 #        - ansible-lint
     post:
       jobs:
-        - testbed-deploy-managerless
+        - testbed-deploy
     periodic-hourly-otc:
       jobs:
         - ansible-lint

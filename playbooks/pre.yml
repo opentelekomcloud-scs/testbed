@@ -65,3 +65,9 @@
         src: local.env.j2
         dest: "{{ terraform_path }}/local.env"
         mode: "0644"
+
+    - name: Write clouds.yaml file
+      ansible.builtin.copy:
+        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
+        dest: "{{ terraform_path }}/clouds.yaml"
+        mode: 0600

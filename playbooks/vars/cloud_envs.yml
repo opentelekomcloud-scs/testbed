@@ -6,3 +6,4 @@ cloud_envs:
   testbed-orchestrator-pco: pluscloudopen
   testbed-orchestrator-cleura: cleura
   testbed-orchestrator-wavecon: wavestack
+  ubuntu-jammy: otc

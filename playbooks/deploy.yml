@@ -94,7 +94,6 @@
     - name: Display detailed error log
       ansible.builtin.debug:
         msg: |
-          Command: {{ result.cmd }}
           Stdout: {{ result.stdout }}
           Stderr: {{ result.stderr }}
 

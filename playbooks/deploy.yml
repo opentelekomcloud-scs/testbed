@@ -89,7 +89,7 @@
         - services
       changed_when: true
       register: result
-      ignore_errors: yes
+      failed_when: result.rc != 0
 
     - name: Display detailed error log
       ansible.builtin.debug:

@@ -95,11 +95,12 @@
       register: result
       failed_when: result.rc != 0
       ignore_errors: yes
+      debugger: always
 
     - name: Display detailed error log
       ansible.builtin.debug:
         msg: |
-          result: {{ result.cmd | default('N/A') }}
+          result: {{ result | default('N/A') }}
 
     - fail:
         msg: intended fail

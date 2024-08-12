@@ -89,6 +89,8 @@
         - services
       changed_when: true
       register: result
+      ignore_errors: yes
+
 
     - name: Display detailed error log
       ansible.builtin.debug:
@@ -97,6 +99,9 @@
           Stdout: {{ result.stdout }}
           Stderr: {{ result.stderr }}
       when: result.rc != 0
+
+    - fail:
+        msg: intended fail
 
     - name: Wait up to 300 seconds for port 22 to become open and contain "OpenSSH"
       ansible.builtin.wait_for:

@@ -79,6 +79,10 @@
       ansible.builtin.set_fact:
         manager_host: "{{ manager_address.stdout | split('=') | last }}"
 
+    - name: Increase verbosity during playbook execution
+      ansible.builtin.set_fact:
+        ANSIBLE_VERBOSITY: 3  # Set to 1 for -v, 2 for -vv, 3 for -vvv, 4 for -vvvv
+
     - name: Update ansible collections
       ansible.builtin.command:
         chdir: "{{ ansible_user_dir }}"

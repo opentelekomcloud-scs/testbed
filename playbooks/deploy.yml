@@ -111,6 +111,7 @@
       changed_when: true
       register: result
       failed_when: result.rc != 0
+      ignore_errors: yes
 
     - name: Display detailed error log
       ansible.builtin.debug:

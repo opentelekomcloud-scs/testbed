@@ -61,6 +61,8 @@
     cleanup-run: playbooks/cleanup.yml
     required-projects:
       - osism/terraform-base
+      - osism/ansible-collection-services
+      - osism/ansible-collection-commons
     timeout: 10800
     vars:
       terraform_blueprint: testbed-default

@@ -79,20 +79,6 @@
       ansible.builtin.set_fact:
         manager_host: "{{ manager_address.stdout | split('=') | last }}"
 
-    - name: Increase verbosity during playbook execution
-      ansible.builtin.set_fact:
-        ANSIBLE_VERBOSITY: 3  # Set to 1 for -v, 2 for -vv, 3 for -vvv, 4 for -vvvv
-
-    - name: Show source tree
-      ansible.builtin.command:
-        cmd: tree /home/zuul
-      register: debug_result
-
-    - name: Display debugresult
-      ansible.builtin.debug:
-        msg: |
-          result: {{ debug_result | default('N/A') }}
-
     - name: Update ansible collections
       ansible.builtin.command:
         chdir: "{{ ansible_user_dir }}"
@@ -102,17 +88,6 @@
         - commons
         - services
       changed_when: true
-      register: result
-      failed_when: result.rc != 0
-      ignore_errors: yes
-
-    - name: Display detailed error log
-      ansible.builtin.debug:
-        msg: |
-          result: {{ result | default('N/A') }}
-
-    - fail:
-        msg: intended fail
 
     - name: Wait up to 300 seconds for port 22 to become open and contain "OpenSSH"
       ansible.builtin.wait_for:

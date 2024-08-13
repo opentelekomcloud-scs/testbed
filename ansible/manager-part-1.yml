@@ -42,7 +42,7 @@
       become: true
       become_user: dragon
       ansible.posix.synchronize:
-        src: "{{ repo_path }}/osism/testbed/"
+        src: "{{ repo_path }}/opentelekomcloud-scs/testbed/"
         delete: true
         dest: /opt/configuration
 

@@ -83,6 +83,16 @@
       ansible.builtin.set_fact:
         ANSIBLE_VERBOSITY: 3  # Set to 1 for -v, 2 for -vv, 3 for -vvv, 4 for -vvvv
 
+    - name: Show source tree
+      ansible.builtin.command:
+        cmd: tree /home/zuul
+      register: debug_result
+
+    - name: Display debugresult
+      ansible.builtin.debug:
+        msg: |
+          result: {{ debug_result | default('N/A') }}
+
     - name: Update ansible collections
       ansible.builtin.command:
         chdir: "{{ ansible_user_dir }}"

@@ -3,10 +3,6 @@ set -x
 set -e
 
 source /opt/configuration/scripts/include.sh
+source /opt/manager-vars.sh
 
-echo
-echo "# Refstack"
-echo
-
-osism validate refstack
-/opt/refstack/test.sh
+osism apply clusterapi

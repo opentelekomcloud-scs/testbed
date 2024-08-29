@@ -34,14 +34,6 @@ homer_url_prometheus: "https://api-int.testbed.osism.xyz:9091/"
 homer_url_rabbitmq: "https://api-int.testbed.osism.xyz:15672/"
 
 ##########################
-# k3s
-
-cilium_bgp: true
-kube_vip_arp: false
-kube_vip_bgp: true
-kube_vip_iface:
-
-##########################
 # keycloak
 
 keycloak_traefik: true
@@ -115,3 +107,8 @@ nexus_host: nexus.testbed.osism.xyz
 
 thanos_sidecar_host: "{{ hostvars[inventory_hostname]['ansible_' + internal_interface]['ipv4']['address'] }}"
 thanos_sidecar_prometheus_url: "https://api-int.testbed.osism.xyz:9091/"
+
+##########################
+# k3s
+
+metal_lb_ip_range: "192.168.129.1-192.168.129.254"

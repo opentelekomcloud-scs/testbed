@@ -8,8 +8,6 @@
     venv_path: /opt/venv
     ansible_python_interpreter: "{{ venv_path }}/bin/python3"
 
-    apt_lock_timeout: 300
-
   tasks:
     - name: Create custom facts directory
       become: true
@@ -35,7 +33,6 @@
 - name: Before the deployment of the manager
   hosts: testbed-manager.testbed.osism.xyz
   connection: local
-  gather_facts: true
 
   vars:
     venv_path: /opt/venv
@@ -103,8 +100,23 @@
         - result.stat.exists is defined
         - result.stat.exists | bool
 
-    # This speeds up the Refstack tests that interact with Glance. The use of these
-    # paraemters in production is not recommended. Further details in OSSN-0090.
+    # The correct package name is linux-generic-hwe-22.04 on Ubuntu 22.04
+    # and linux-generic-hwe-24.04 on Ubuntu 24.04.
+    - name: Install HWE kernel package on Ubuntu
+      ansible.builtin.lineinfile:
+        path: /opt/configuration/environments/configuration.yml
+        line: "required_packages_extra: ['linux-generic-hwe-{{ ansible_distribution_version }}']"
+      when: ansible_distribution == "Ubuntu"
+
+    # Looks like it is not possible to use Nexus with authentication with Podman.
+    - name: Do not use Nexus for Ceph on CentOS
+      ansible.builtin.lineinfile:
+        path: /opt/configuration/environments/configuration.yml
+        line: "ceph_docker_registry: nexus.testbed.osism.xyz:8192"
+        state: absent
+      when: ansible_os_family == "RedHat"
+
+    # The use of these paraemters in production is not recommended. Further details in OSSN-0090.
     # https://wiki.openstack.org/wiki/OSSN/OSSN-0090
     - name: Use insecure glance configuration
       ansible.builtin.blockinfile:
@@ -138,7 +150,6 @@
 - name: Apply role traefik & netbox
   hosts: testbed-manager.testbed.osism.xyz
   connection: local
-  gather_facts: true
 
   vars:
     venv_path: /opt/venv
@@ -177,7 +188,6 @@
 - name: Deploy manager service
   hosts: testbed-manager.testbed.osism.xyz
   connection: local
-  gather_facts: true
 
   vars:
     venv_path: /opt/venv

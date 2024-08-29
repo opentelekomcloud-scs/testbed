@@ -3,6 +3,7 @@
 # environment to be used.
 cloud_envs:
   testbed-orchestrator: ci
+  ubuntu-jammy: otc
 
 # Mapping of the terraform environments to the image
 # username to be used.

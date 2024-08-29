@@ -5,14 +5,24 @@
 
   vars:
     apt_lock_timeout: 300
+    dnf_lock_timeout: 300
 
   tasks:
-    - name: Install required packages
+    - name: Install required packages (RedHat)
+      become: true
+      ansible.builtin.dnf:
+        name: python3-netifaces
+        state: present
+        lock_timeout: "{{ dnf_lock_timeout }}"
+      when: ansible_os_family == "RedHat"
+
+    - name: Install required packages (Debian)
       become: true
       ansible.builtin.apt:
         name: python3-netifaces
         state: present
         lock_timeout: "{{ apt_lock_timeout }}"
+      when: ansible_os_family == "Debian"
 
     - name: Create custom facts directory
       become: true
@@ -32,23 +42,39 @@
         group: root
         mode: 0755
 
-    - name: Gathers facts about remote hosts
-      ansible.builtin.setup:
-
 - name: Copy custom ceph devices facts
   hosts: ceph-resource
   gather_facts: false
 
   vars:
     apt_lock_timeout: 300
+    dnf_lock_timeout: 300
 
   tasks:
-    - name: Install required packages
+    - name: Apply osism.commons.repository role
+      ansible.builtin.import_role:
+        name: osism.commons.repository
+
+    - name: Install required packages (RedHat)
+      become: true
+      ansible.builtin.dnf:
+        name:
+          - hwinfo
+          - python3-dotenv
+        enablerepo: epel
+        state: present
+        lock_timeout: "{{ dnf_lock_timeout }}"
+      when: ansible_os_family == "RedHat"
+
+    - name: Install required packages (Debian)
       become: true
       ansible.builtin.apt:
-        name: ["python3-dotenv", "hwinfo"]
+        name:
+          - hwinfo
+          - python3-dotenv
         state: present
         lock_timeout: "{{ apt_lock_timeout }}"
+      when: ansible_os_family == "Debian"
 
     - name: Create custom facts directory
       become: true
@@ -73,5 +99,14 @@
         - testbed_ceph_osd_devices
         - testbed_ceph_osd_devices_all
 
-    - name: Gathers facts about remote hosts
+- name: Gather facts for all hosts
+  ignore_unreachable: true
+  hosts: "{{ hosts_gather_facts|default(hosts_default_group|default('generic')) }}"
+  gather_facts: false
+  strategy: "{{ osism_strategy | default('linear') }}"
+
+  tasks:
+    - name: Gathers facts about hosts
       ansible.builtin.setup:
+        filter: "{{ osism_setup_filter | default('') }}"
+        gather_subset: "{{ osism_setup_gather_subset | default('all') }}"

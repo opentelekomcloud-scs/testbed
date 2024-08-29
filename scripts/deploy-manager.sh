@@ -26,6 +26,17 @@ osism apply operator -u $IMAGE_NODE_USER -l testbed-nodes
 osism apply --environment custom facts
 osism apply bootstrap
 
+# On CentOS the Ceph deployment only works with podman.
+if [[ -e /etc/redhat-release ]]; then
+    osism apply podman
+
+    # There is currently some kind of race condition that prevents the custom network
+    # facts from being executed because the netifaces module is not found although it
+    # is actually installed. Therefore the facts are updated here again.
+    osism apply --environment custom facts
+    osism apply gather-facts
+fi
+
 # copy network configuration
 osism apply network
 
@@ -33,13 +44,7 @@ osism apply network
 osism apply wireguard
 
 # prepare wireguard configuration
-if [[ -e /home/dragon/wg0-dragon.conf ]]; then
-    # on OSISM < 5.0.0 this file is not yet present.
-    mv /home/dragon/wg0-dragon.conf /home/dragon/wireguard-client.conf
-fi
-
-sed -i -e s/WIREGUARD_PUBLIC_IP_ADDRESS/$(curl my.ip.fi)/ /home/dragon/wireguard-client.conf
-sed -i -e "s/CHANGEME - dragon private key/GEQ5eWshKW+4ZhXMcWkAAbqzj7QA9G64oBFB3CbrR0w=/" /home/dragon/wireguard-client.conf
+sh -c '/opt/configuration/scripts/prepare-wireguard-configuration.sh'
 
 # apply workarounds
 osism apply --environment custom workarounds
@@ -61,6 +66,9 @@ if [[ $CEPH_STACK == "ceph-ansible" ]]; then
 fi
 wait_for_container_healthy 60 kolla-ansible
 wait_for_container_healthy 60 osism-ansible
+
+# gather facts
+osism apply gather-facts
 
 # create symlinks for deploy scripts
 sudo ln -sf /opt/configuration/scripts/deploy/001-helper-services.sh /usr/local/bin/deploy-helper
@@ -84,6 +92,10 @@ sudo ln -sf /opt/configuration/scripts/upgrade/400-monitoring-services.sh /usr/l
 sudo ln -sf /opt/configuration/scripts/bootstrap/300-openstack-services.sh /usr/local/bin/bootstrap-openstack
 sudo ln -sf /opt/configuration/scripts/bootstrap/301-openstack-octavia-amhpora-image.sh /usr/local/bin/bootstrap-octavia
 sudo ln -sf /opt/configuration/scripts/bootstrap/302-openstack-k8s-clusterapi-images.sh /usr/local/bin/bootstrap-clusterapi
+
+# create symlinks for other scripts
+sudo ln -sf /opt/configuration/scripts/pull-images.sh /usr/local/bin/pull-images
+sudo ln -sf /opt/configuration/scripts/disable-local-registry.sh /usr/local/bin/disable-local-registry
 
 if [[ "$EXTERNAL_API" == "true" ]]; then
     sh -c '/opt/configuration/scripts/customisations/external-api.sh'

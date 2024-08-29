@@ -2,12 +2,8 @@
 - name: Prepare manager part 2
   hosts: testbed-manager.testbed.osism.xyz
   connection: local
-  gather_facts: true
 
   vars:
-    venv_path: /opt/venv
-    ansible_python_interpreter: "{{ venv_path }}/bin/python3"
-
     version_manager: latest
 
   tasks:
@@ -46,12 +42,8 @@
 - name: Run manager part 2
   hosts: testbed-manager.testbed.osism.xyz
   connection: local
-  gather_facts: true
 
   vars:
-    venv_path: /opt/venv
-    ansible_python_interpreter: "{{ venv_path }}/bin/python3"
-
     version_manager: latest
 
     docker_configure_repository: true

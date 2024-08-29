@@ -1,30 +1,57 @@
 ---
 - name: Run manager part 1
   hosts: testbed-manager.testbed.osism.xyz
-  gather_facts: false
 
   vars:
     ansible_ssh_user: dragon
-    apt_lock_timeout: 300
     operator_user: dragon
-    repo_path: /home/ubuntu/src/github.com
+    repo: osism/testbed
     version_manager: latest
     is_zuul: false
 
     venv_path: /opt/venv
+
     ansible_playbook: "{{ venv_path }}/bin/ansible-playbook"
 
   tasks:
+    - name: Set venv_command fact (RedHat)
+      ansible.builtin.set_fact:
+        venv_command: python3.11 -m venv
+      when: ansible_os_family == "RedHat"
+
+    - name: Set venv_command fact (Debian)
+      ansible.builtin.set_fact:
+        venv_command: python3 -m venv
+      when: ansible_os_family == "Debian"
+
+    - name: Apply osism.commons.repository role
+      ansible.builtin.import_role:
+        name: osism.commons.repository
+
+    - name: Get home directory of ansible user
+      ansible.builtin.shell: |
+        set -o pipefail
+        getent passwd {{ ansible_user }} | cut -d: -f6
+      args:
+        executable: /bin/bash
+      changed_when: false
+      register: result_home
+
+    - name: Set repo_path fact
+      ansible.builtin.set_fact:
+        repo_path: "{{ result_home.stdout }}/src/github.com"
+      when: repo_path is not defined
+
     - name: Copy SSH public key
       ansible.builtin.copy:
-        content: "{{ lookup('file', '.id_rsa.' + cloud_env + '.pub') }}\n"
+        content: "{{ lookup('file', '.id_rsa.' + cloud + '.pub') }}\n"
         dest: .ssh/id_rsa.pub
         mode: '0644'
         owner: "{{ operator_user }}"
 
     - name: Copy SSH private key
       ansible.builtin.copy:
-        content: "{{ lookup('file', '.id_rsa.' + cloud_env) }}\n"
+        content: "{{ lookup('file', '.id_rsa.' + cloud) }}\n"
         dest: .ssh/id_rsa
         mode: '0600'
         owner: "{{ operator_user }}"
@@ -42,27 +69,9 @@
       become: true
       become_user: dragon
       ansible.posix.synchronize:
-        src: "{{ repo_path }}/opentelekomcloud-scs/testbed/"
+        src: "{{ repo_path }}/{{ repo }}/"
         delete: true
         dest: /opt/configuration
-
-    - name: Install required packages
-      become: true
-      ansible.builtin.apt:
-        name: "{{ item }}"
-        state: present
-        lock_timeout: "{{ apt_lock_timeout }}"
-      loop:
-        - build-essential
-        - python3-dev
-
-    - name: Remove some python packages
-      become: true
-      ansible.builtin.apt:
-        state: absent
-        name:
-          - python3-docker
-          - python3-requests
 
     - name: Install python requirements in venv
       ansible.builtin.pip:
@@ -70,7 +79,7 @@
         name: "{{ item }}"
         state: present
         virtualenv: "{{ venv_path }}"
-        virtualenv_command: python3 -m venv
+        virtualenv_command: "{{ venv_command }}"
       loop:
         - netifaces
         - "python-gilt==1.2.3"
@@ -116,18 +125,35 @@
         - version_manager == "latest"
       changed_when: true
 
-    - name: Copy testbed crt
+    - name: Copy testbed custom CA certificate on Debian/Ubuntu
       become: true
       ansible.builtin.copy:
         src: ../environments/kolla/certificates/ca/testbed.crt
         dest: /usr/local/share/ca-certificates/
         mode: '0644'
         owner: root
+      when: ansible_os_family == "Debian"
 
-    - name: Run update-ca-certificates
+    - name: Copy testbed custom CA certificate on CentOS
+      become: true
+      ansible.builtin.copy:
+        src: ../environments/kolla/certificates/ca/testbed.crt
+        dest: /etc/pki/ca-trust/source/anchors/
+        mode: '0644'
+        owner: root
+      when: ansible_os_family == "RedHat"
+
+    - name: Run update-ca-certificates on Debian/Ubuntu
       become: true
       ansible.builtin.command: update-ca-certificates
       changed_when: true
+      when: ansible_os_family == "Debian"
+
+    - name: Run update-ca-trust on RedHat
+      become: true
+      ansible.builtin.command: update-ca-trust extract
+      changed_when: true
+      when: ansible_os_family == "RedHat"
 
     - name: Run manager part 2
       ansible.builtin.command: "{{ ansible_playbook }} -i testbed-manager.testbed.osism.xyz, -e version_manager={{ version_manager }} /opt/configuration/ansible/manager-part-2.yml"

@@ -55,6 +55,21 @@
       ansible.builtin.debug:
         msg: "Is Zuul deployment: {{ _is_zuul }}"
 
+    - name: Debug all variables used in command
+      ansible.builtin.debug:
+        msg: >
+          Environment: ci-{{ _terraform_environment }}
+          Cloud: {{ cloud }}
+          Image Username: {{ image_username }}
+          Terraform Binary: {{ terraform_binary }}
+          Version Ceph: {{ _ceph_version }}
+          Version Manager: {{ _manager_version }}
+          Version OpenStack: {{ _openstack_version }}
+          Tempest: {{ _tempest | lower }}
+          Is Zuul: {{ _is_zuul | lower }}
+          Ceph Stack: {{ _ceph_stack }}
+          Terragrunt Path: {{ terragrunt_tfpath }}
+
     - name: Create infrastructure (latest)
       ansible.builtin.command:
         chdir: "{{ terraform_path }}"

@@ -51,6 +51,10 @@
         terragrunt_tfpath: terraform
       when: "'nodepool' not in hostvars[groups['all'][0]]"
 
+    - name: Debug _is_zuul value
+      ansible.builtin.debug:
+        msg: "Is Zuul deployment: {{ _is_zuul }}"
+
     - name: Create infrastructure (latest)
       ansible.builtin.command:
         chdir: "{{ terraform_path }}"

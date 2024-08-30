@@ -46,6 +46,7 @@
     vars:
       terraform_blueprint: testbed-managerless
       cloud_env: managerless-otc
+      terraform_environment: otc
     secrets:
       - name: secret
         secret: SECRET_TESTBED
@@ -67,6 +68,7 @@
     vars:
       terraform_blueprint: testbed-default
       cloud_env: managerless-otc
+      terraform_environment: otc
     secrets:
       - name: secret
         secret: SECRET_TESTBED

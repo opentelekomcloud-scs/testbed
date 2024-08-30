@@ -13,5 +13,3 @@ image_usernames:
   debian-12: debian
   centos-stream-9: cloud-user
   otc: ubuntu
-
-terraform_environment: otc

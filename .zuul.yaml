@@ -69,6 +69,8 @@
       terraform_blueprint: testbed-default
       cloud_env: managerless-otc
       terraform_environment: otc
+      netbox_service_netbox_start_period : 240s
+      netbox_service_netbox_worker_start_period: 60s
     secrets:
       - name: secret
         secret: SECRET_TESTBED
@@ -89,6 +91,8 @@
       terraform_blueprint: testbed-default
       cloud_env: managerless-otc
       terraform_environment: otc
+      netbox_service_netbox_start_period : 240s
+      netbox_service_netbox_worker_start_period: 60s
     secrets:
       - name: secret
         secret: SECRET_TESTBED

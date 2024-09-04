@@ -2,11 +2,11 @@
 set -e
 
 source /opt/configuration/scripts/include.sh
+source /opt/configuration/scripts/manager-version.sh
+
+CEPH_VERSION=$(docker inspect --format '{{ index .Config.Labels "de.osism.release.ceph" }}' ceph-ansible)
 
 sh -c '/opt/configuration/scripts/prepare-ceph-configuration.sh'
-
-MANAGER_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.version"}}' osism-ansible)
-CEPH_VERSION=$(docker inspect --format '{{ index .Config.Labels "de.osism.release.ceph" }}' ceph-ansible)
 
 # The callback plugin is not included in the Pacific image. The plugin is no longer
 # added there because the builds for Pacific are disabled. This callback plugin will
@@ -15,7 +15,7 @@ if [[ $MANAGER_VERSION == "latest" && $CEPH_VERSION == "pacific" ]]; then
     sed -i "s/osism.commons.still_alive/community.general.yaml/" /opt/configuration/environments/ansible.cfg
 fi
 
-if [[ $MANAGER_VERSION =~ ^4\.[0-9]\.[0-9]$ ]]; then
+if [[ $(semver $MANAGER_VERSION 5.0.0) -eq -1 && $MANAGER_VERSION != "latest" ]]; then
     osism apply ceph-base
     osism apply ceph-mdss
     osism apply ceph-rgws
@@ -25,7 +25,7 @@ if [[ $MANAGER_VERSION =~ ^4\.[0-9]\.[0-9]$ ]]; then
 else
     osism apply ceph
 
-    if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]$ || $MANAGER_VERSION == "latest" ]]; then
+    if [[ $(semver $MANAGER_VERSION 7.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
         osism apply ceph-pools
     fi
 

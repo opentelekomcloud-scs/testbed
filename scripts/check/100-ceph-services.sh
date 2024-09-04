@@ -3,8 +3,7 @@ set -x
 set -e
 
 source /opt/configuration/scripts/include.sh
-
-MANAGER_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.version"}}' osism-ansible)
+source /opt/configuration/scripts/manager-version.sh
 
 echo
 echo "# Ceph status"
@@ -43,8 +42,8 @@ echo
 ceph df
 
 # The 'osism validate' command is only available since 5.0.0.
-if [[ $MANAGER_VERSION =~ ^4\.[0-9]\.[0-9]$ ]]; then
-    echo "ceph validate not possible with OSISM 4"
+if [[ $(semver $MANAGER_VERSION 5.0.0) -eq -1 && $MANAGER_VERSION != "latest" ]]; then
+    echo "osism validate ceph-* not possible with OSISM < 5.0.0"
 else
     # The Ceph validate plays are only usable with Docker at the moment.
     # On CentOS we use Podman for the Ceph deployment and cannot use the

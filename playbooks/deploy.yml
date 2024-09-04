@@ -25,21 +25,21 @@
 
     _ceph_version: "{{ ceph_version | default('quincy') }}"
     _manager_version: "{{ manager_version | default('latest') }}"
-    _openstack_version: "{{ openstack_version | default('2023.2') }}"
+    _openstack_version: "{{ openstack_version | default('2024.1') }}"
 
     _nutshell: "{{ nutshell | default(false) | bool }}"
     _tempest: "{{ tempest | default(false) | bool }}"
 
     _ceph_stack: "{{ ceph_stack | default('ceph-ansible') }}"
 
-    _terraform_environment: "{{ terraform_environment | default('ubuntu-22.04') }}"
+    _terraform_environment: "{{ terraform_environment | default('ci-ubuntu-22.04') }}"
 
   tasks:
     - name: Set facts (Zuul deployment)
       ansible.builtin.set_fact:
         _is_zuul: true
         cloud: "{{ cloud_envs[hostvars[groups['all'][0]]['nodepool']['label']] }}"
-        image_username: "{{ image_usernames[_terraform_environment] }}"
+        image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: "{{ ansible_user_dir }}/terraform"
       when: "'nodepool' in hostvars[groups['all'][0]]"
 
@@ -47,16 +47,35 @@
       ansible.builtin.set_fact:
         _is_zuul: false
         cloud: "{{ testbed_cloud | default('ci') }}"
-        image_username: "{{ image_usernames[_terraform_environment] }}"
+        image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: terraform
       when: "'nodepool' not in hostvars[groups['all'][0]]"
+
+    - name: Debug _is_zuul value
+      ansible.builtin.debug:
+        msg: "Is Zuul deployment: {{ _is_zuul }}"
+
+    - name: Debug all variables used in command
+      ansible.builtin.debug:
+        msg: >
+          Environment: ci-{{ _terraform_environment }}
+          Cloud: {{ cloud }}
+          Image Username: {{ image_username }}
+          Terraform Binary: {{ terraform_binary }}
+          Version Ceph: {{ _ceph_version }}
+          Version Manager: {{ _manager_version }}
+          Version OpenStack: {{ _openstack_version }}
+          Tempest: {{ _tempest | lower }}
+          Is Zuul: {{ _is_zuul | lower }}
+          Ceph Stack: {{ _ceph_stack }}
+          Terragrunt Path: {{ terragrunt_tfpath }}
 
     - name: Create infrastructure (latest)
       ansible.builtin.command:
         chdir: "{{ terraform_path }}"
         cmd: |
           make
-            ENVIRONMENT=ci-{{ _terraform_environment }}
+            ENVIRONMENT={{ _terraform_environment }}
             CLOUD={{ cloud }}
             IMAGE_USERNAME={{ image_username }}
             TERRAFORM={{ terraform_binary }}
@@ -79,7 +98,7 @@
         chdir: "{{ terraform_path }}"
         cmd: |
           make \
-            ENVIRONMENT=ci-{{ _terraform_environment }}
+            ENVIRONMENT={{ _terraform_environment }}
             CLOUD={{ cloud }}
             IMAGE_USERNAME={{ image_username }}
             TERRAFORM={{ terraform_binary }}

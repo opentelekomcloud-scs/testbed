@@ -112,3 +112,9 @@ thanos_sidecar_prometheus_url: "https://api-int.testbed.osism.xyz:9091/"
 # k3s
 
 metal_lb_ip_range: "192.168.129.1-192.168.129.254"
+
+##########################
+# netbox
+
+netbox_service_netbox_worker_start_period: "60s"
+netbox_service_netbox_start_period: "240s"

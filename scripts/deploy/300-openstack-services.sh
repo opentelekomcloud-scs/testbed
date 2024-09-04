@@ -2,9 +2,7 @@
 set -e
 
 source /opt/configuration/scripts/include.sh
-
-MANAGER_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.version"}}' osism-ansible)
-OPENSTACK_VERSION=$(docker inspect --format '{{ index .Config.Labels "de.osism.release.openstack"}}' kolla-ansible)
+source /opt/configuration/scripts/manager-version.sh
 
 osism apply keystone
 osism apply placement
@@ -24,7 +22,7 @@ osism apply aodh
 
 osism apply kolla-ceph-rgw
 
-if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]?$ || $MANAGER_VERSION == "latest" ]]; then
+if [[ $(semver $MANAGER_VERSION 7.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
     osism apply clusterapi
     osism apply magnum
 fi

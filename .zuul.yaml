@@ -3,16 +3,27 @@
     name: SECRET_TESTBED
     data:
       MANAGERLESS_CREDENTIALS: !encrypted/pkcs1-oaep
-        - rAaXWCpcQ7w9l6JMtyCdB80OHrbIkhASOvA75STQe6FgghD3GTCz0zfIXBsxmXtdItKBq
-          0sVhhWoQ+06tpmUfcnjHbYYAepeeI/sBkbNOoMxPWvhG3em0Qo2kkHcsD12pzMhZckQH1
-          tpPRgIJbiX+Xx7XSOPg1c0ZwKXT7cisF4dlVtjqrgSGdD2d/uBH242YZQFnOwxSovlCgw
-          XeHZjR32BhuZ4ru7uV9YNSzqmMNyYvfbQs13ysD9ZC94IwTLTIRVQjfrajZQqFpoR5g30
-          x6cM5iMuSOMfNOLJbvJ/nMaKwBYN913lpSiKYBfj93lbwzqWOAVED1JnM10oQPawSKTN5
-          5RvrskS/V/+CzYY9GggNogJCm4i3e/e/lii0Iu9b1eFiiDitjlMeQTog5hTJqSYVz2rwg
-          +FWInoeTA8cSruqIbI94sZ2sLc65We4/ozq3e+M8NRjK34Vz0J4QHAaPXUKogliOUH5Xv
-          jtkqU1EUFwCR2/uwALLjBtTZ4h59J0MZQ+v08ibqbt+JzQoYdLOXNn4apxJhY+acn4d7a
-          G0LMKaO+TlxHTc5h3T9ycnfVXxOE5FDTDmKqpeNPO7nmGZRiwn3ztiNkRUcx6y/IvyMQ0
-          GEXGvBNALJWYvDIb5q9RkbTPnLftxkKuKV15PUyGAmZl26OXlhKWQdgowN28nA=
+        - wtAJN/rvucChNpzk6dIK6NlR6wCjUgJciAVfaWyxf32zN10XBQbME0hxvg6iNKNYeox0+
+          GaXv/Zc0f1EuOf3lrR9O89KaRXLvhkzkXRIzXCF3xxLm/iBHei0Td0bg8/F+VQT0eEz6M
+          I1GHQ2Yn/cAef2CzxITasC2do5qyWHSII7shXB48h5gXZ7bRWipvkFS/W1+PpioXI3YKp
+          mwWs/JGJVzDuA8N+NcQlQO+bOcmpUyfNwLBKZuG0lmeQbIekZBIqcHnX8HdmCp592TKxQ
+          cBN5Rm7uWR9ZPfL38Dqo5b2wAFSStJsKsDGhfNjvurhoSk6vDsj459xoi7oXG0L3NN8wr
+          OFAH9kqbTqoXcvOS2u34stGpi6N2BjVV5YgBtaMmAXO6slB3nkBCbK69y2KgnD1OlnoIT
+          0epyiJS+E/9RoLcKnMjIVnJjtgOk4mQSmt2ery7mTXOrS2Yuc4scJVRK+m8fsU5FbX+R9
+          tYKaiQBvenL4BhKfYg7bVSCYdfGm4H8RWB0Gkvj7VQVSbO+LSNdwvxhDibqq4GKqErYc0
+          BzPJ1bLGNhbbP4H9L7h6B3L2mxmQnYWjI3k9BUxB8GDbd/Oc0Wl/4O2QQtKAGD/XLk1tX
+          GbvpukiQPZw0EUi6maXxeuzr342Rw0TbksQ1sNIxASpoA0awlwuyJqX585xWR8=
+      PUBLICCLOUDS: !encrypted/pkcs1-oaep
+        - xUNLeryZnS7WOQpNQyko0M9zIBcGR5q62AsKprNXGhuGhZn4g4booqH9Xo6ilrVUBvs6A
+          lNfRtAoBycTAwVwsjkB0q1YBhhVVkt2ZH6MMB6MLTsId+gyR1+YDJyJwXCeO4eG9uSX/I
+          Ac1HRy6YrTlFtnt4b6nLWpcGdqj5uI1vgnn0PZOrlwOqQ25QTGO5jqIoOMtupdPJNQWmX
+          mZI6uug2NbtSQg+ye/Ak0g5NxFFOWAxJkQHtWwBub26w0S8jbjNUGfymtsgU61FSSWlI4
+          NaZgnJcwFyFFl0r/wH7wyc17aXZhG9pF0EltzIC15FSN7L4gVdefMP0H4rVSuMFa/h05Q
+          wZvweNWEico2DdAtW1qqdLKT0Ozj0pSPNyH+AiSaALOGjwYV32S82dtOoBlEl8rAoRxJg
+          1Q2yoaU4hUebbLwfgRZRJOQTe9V41aMrJwO79Huf/YZdF7O146FHRtMjSu8titWFf4RyO
+          eTGycbiNOCblOA5zPdoHdzDcZbwq6qpkoe17Zlya0wNn1Sw2s8KhkYeRgFoEsj6sJ3usR
+          0sAcVGVjthqwIJyqp3pkph7WA+Z7eKN4JzO9uv8w7pb6BAKAqf3vVGlO6IeFUQ2tu4GLN
+          m1K44JWu1x0LqCwFDdVV6IL93V2vJQ+GFbXBNMMAezeVkMFwdz+BPN072miT1M=
 
 - semaphore:
     name: semaphore-testbed-managerless
@@ -35,6 +46,7 @@
     vars:
       terraform_blueprint: testbed-managerless
       cloud_env: managerless-otc
+      terraform_environment: otc
     secrets:
       - name: secret
         secret: SECRET_TESTBED
@@ -50,10 +62,33 @@
     cleanup-run: playbooks/cleanup.yml
     required-projects:
       - osism/terraform-base
+      - osism/ansible-collection-services
+      - osism/ansible-collection-commons
     timeout: 10800
     vars:
       terraform_blueprint: testbed-default
       cloud_env: managerless-otc
+      terraform_environment: otc
+    secrets:
+      - name: secret
+        secret: SECRET_TESTBED
+    semaphores:
+      - name: semaphore-testbed
+
+- job:
+    name: testbed-deploy-post
+    nodeset: ubuntu-jammy
+    pre-run: playbooks/pre.yml
+    run: playbooks/deploy.yml
+    post-run: playbooks/post.yml
+    cleanup-run: playbooks/cleanup.yml
+    required-projects:
+      - osism/terraform-base
+    timeout: 10800
+    vars:
+      terraform_blueprint: testbed-default
+      cloud_env: managerless-otc
+      terraform_environment: otc
     secrets:
       - name: secret
         secret: SECRET_TESTBED
@@ -65,10 +100,13 @@
     check:
       jobs:
         - flake8
-#        - ansible-lint
-    post:
+    check-post:
       jobs:
         - testbed-deploy
+    post:
+      jobs:
+        - testbed-deploy-post
+
     periodic-hourly-otc:
       jobs:
         # - ansible-lint

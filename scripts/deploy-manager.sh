@@ -12,13 +12,18 @@ echo
 source /opt/configuration/scripts/include.sh
 source /opt/manager-vars.sh
 
+# create symlink for semver script
+sudo ln -sf /opt/configuration/contrib/semver2.sh /usr/local/bin/semver
+
 # deploy manager service
 sh -c '/opt/configuration/scripts/deploy/000-manager-service.sh'
 
 # Do not use the Keystone/Keycloak integration by default. We only use this integration
 # in a special identity testbed.
-rm -f /opt/configuration/environments/kolla/group_vars/keystone.yml
+rm -f /opt/configuration/environments/kolla/files/overlays/horizon/_9999-custom-settings.py
+rm -f /opt/configuration/environments/kolla/files/overlays/horizon/custom_local_settings
 rm -f /opt/configuration/environments/kolla/files/overlays/keystone/wsgi-keystone.conf
+rm -f /opt/configuration/environments/kolla/group_vars/keystone.yml
 rm -rf /opt/configuration/environments/kolla/files/overlays/keystone/federation
 
 # bootstrap nodes
@@ -67,13 +72,18 @@ fi
 wait_for_container_healthy 60 kolla-ansible
 wait_for_container_healthy 60 osism-ansible
 
+# disable ara service
+if [[ "$IS_ZUUL" == "true" || "$ARA" == "false" ]]; then
+    sh -c '/opt/configuration/scripts/disable-ara.sh'
+fi
+
 # gather facts
 osism apply gather-facts
 
 # create symlinks for deploy scripts
 sudo ln -sf /opt/configuration/scripts/deploy/001-helper-services.sh /usr/local/bin/deploy-helper
-sudo ln -sf /opt/configuration/scripts/deploy/005-kubernetes.sh /usr/local/bin/deploy-kubernetes
-sudo ln -sf /opt/configuration/scripts/deploy/006-kubernetes-clusterapi.sh /usr/local/bin/deploy-kubernetes-clusterapi
+sudo ln -sf /opt/configuration/scripts/deploy/500-kubernetes.sh /usr/local/bin/deploy-kubernetes
+sudo ln -sf /opt/configuration/scripts/deploy/510-clusterapi.sh /usr/local/bin/deploy-kubernetes-clusterapi
 sudo ln -sf /opt/configuration/scripts/deploy/100-ceph-services.sh /usr/local/bin/deploy-ceph
 sudo ln -sf /opt/configuration/scripts/deploy/100-rook-services.sh /usr/local/bin/deploy-rook
 sudo ln -sf /opt/configuration/scripts/deploy/200-infrastructure-services.sh /usr/local/bin/deploy-infrastructure
@@ -81,8 +91,8 @@ sudo ln -sf /opt/configuration/scripts/deploy/300-openstack-services.sh /usr/loc
 sudo ln -sf /opt/configuration/scripts/deploy/400-monitoring-services.sh /usr/local/bin/deploy-monitoring
 
 # create symlinks for upgrade scripts
-sudo ln -sf /opt/configuration/scripts/upgrade/005-kubernetes.sh /usr/local/bin/upgrade-kubernetes
-sudo ln -sf /opt/configuration/scripts/upgrade/006-kubernetes-clusterapi.sh /usr/local/bin/upgrade-kubernetes-clusterapi
+sudo ln -sf /opt/configuration/scripts/upgrade/500-kubernetes.sh /usr/local/bin/upgrade-kubernetes
+sudo ln -sf /opt/configuration/scripts/upgrade/510-clusterapi.sh /usr/local/bin/upgrade-kubernetes-clusterapi
 sudo ln -sf /opt/configuration/scripts/upgrade/100-ceph-services.sh /usr/local/bin/upgrade-ceph
 sudo ln -sf /opt/configuration/scripts/upgrade/200-infrastructure-services.sh /usr/local/bin/upgrade-infrastructure
 sudo ln -sf /opt/configuration/scripts/upgrade/300-openstack-services.sh /usr/local/bin/upgrade-openstack
@@ -94,8 +104,8 @@ sudo ln -sf /opt/configuration/scripts/bootstrap/301-openstack-octavia-amhpora-i
 sudo ln -sf /opt/configuration/scripts/bootstrap/302-openstack-k8s-clusterapi-images.sh /usr/local/bin/bootstrap-clusterapi
 
 # create symlinks for other scripts
-sudo ln -sf /opt/configuration/scripts/pull-images.sh /usr/local/bin/pull-images
 sudo ln -sf /opt/configuration/scripts/disable-local-registry.sh /usr/local/bin/disable-local-registry
+sudo ln -sf /opt/configuration/scripts/pull-images.sh /usr/local/bin/pull-images
 
 if [[ "$EXTERNAL_API" == "true" ]]; then
     sh -c '/opt/configuration/scripts/customisations/external-api.sh'

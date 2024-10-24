@@ -25,29 +25,27 @@
 
     _ceph_version: "{{ ceph_version | default('quincy') }}"
     _manager_version: "{{ manager_version | default('latest') }}"
-    _openstack_version: "{{ openstack_version | default('2023.2') }}"
+    _openstack_version: "{{ openstack_version | default('2024.1') }}"
 
     _nutshell: "{{ nutshell | default(false) | bool }}"
     _tempest: "{{ tempest | default(false) | bool }}"
 
     _ceph_stack: "{{ ceph_stack | default('ceph-ansible') }}"
 
-    _terraform_environment: "{{ terraform_environment | default('ubuntu-22.04') }}"
+    _terraform_environment: "{{ terraform_environment | default('ci-ubuntu-22.04') }}"
 
   tasks:
     - name: Set facts (Zuul deployment)
       ansible.builtin.set_fact:
-        _is_zuul: true
         cloud: "{{ cloud_envs[hostvars[groups['all'][0]]['nodepool']['label']] }}"
-        image_username: "{{ image_usernames[_terraform_environment] }}"
+        image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: "{{ ansible_user_dir }}/terraform"
       when: "'nodepool' in hostvars[groups['all'][0]]"
 
     - name: Set facts (local deployment)
       ansible.builtin.set_fact:
-        _is_zuul: false
         cloud: "{{ testbed_cloud | default('ci') }}"
-        image_username: "{{ image_usernames[_terraform_environment] }}"
+        image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: terraform
       when: "'nodepool' not in hostvars[groups['all'][0]]"
 
@@ -56,7 +54,7 @@
         chdir: "{{ terraform_path }}"
         cmd: |
           make
-            ENVIRONMENT=ci-{{ _terraform_environment }}
+            ENVIRONMENT={{ _terraform_environment }}
             CLOUD={{ cloud }}
             IMAGE_USERNAME={{ image_username }}
             TERRAFORM={{ terraform_binary }}
@@ -64,7 +62,6 @@
             VERSION_MANAGER={{ _manager_version }}
             VERSION_OPENSTACK={{ _openstack_version }}
             TEMPEST={{ _tempest | lower }}
-            IS_ZUUL={{ _is_zuul | lower }}
             CEPH_STACK={{ _ceph_stack }}
             create
       when:
@@ -78,14 +75,13 @@
       ansible.builtin.command:
         chdir: "{{ terraform_path }}"
         cmd: |
-          make \
-            ENVIRONMENT=ci-{{ _terraform_environment }}
+          make
+            ENVIRONMENT={{ _terraform_environment }}
             CLOUD={{ cloud }}
             IMAGE_USERNAME={{ image_username }}
             TERRAFORM={{ terraform_binary }}
             VERSION_MANAGER={{ _manager_version }}
             TEMPEST={{ _tempest | lower }}
-            IS_ZUUL={{ _is_zuul | lower }}
             CEPH_STACK={{ _ceph_stack }}
             create
       when:
@@ -102,7 +98,7 @@
 
     - name: Set manager_host address
       ansible.builtin.set_fact:
-        manager_host: "{{ manager_address['content'] | b64decode | trim | split('=') | last }}"
+        manager_host: "{{ manager_address['content'] | b64decode | trim | split('=') | last | replace('\"', '') }}"
 
     - name: Update ansible collections
       ansible.builtin.command:
@@ -173,7 +169,6 @@
             -e terraform_environment={{ _terraform_environment }} \
             -e repo_path={{ repo_path }} \
             -e version_manager={{ _manager_version }} \
-            -e is_zuul={{ _is_zuul }} \
             manager-part-1.yml
       changed_when: true
 

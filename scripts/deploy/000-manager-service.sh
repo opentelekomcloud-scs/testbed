@@ -5,10 +5,6 @@ set -e
 source /opt/manager-vars.sh
 source /opt/configuration/scripts/include.sh
 
-if [[ $IS_ZUUL == "true" ]]; then
-    sudo touch /etc/osism-ci-image
-fi
-
 # The latest version of the Manager is used by default. If a different
 # version is to be used, it must be used accordingly.
 
@@ -31,16 +27,19 @@ if [[ $CEPH_STACK == "rook" ]]; then
 fi
 
 # enable new kubernetes service
-if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]?$ || $MANAGER_VERSION == "latest" ]]; then
+if [[ $(semver $MANAGER_VERSION 7.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
     echo "enable_osism_kubernetes: true" >> /opt/configuration/environments/manager/configuration.yml
 fi
+
+# enable resource nodes
+/opt/configuration/scripts/enable-resource-nodes.sh
 
 if [[ -e /opt/venv/bin/activate ]]; then
     source /opt/venv/bin/activate
 fi
 
 ansible-playbook \
-  -i testbed-manager.testbed.osism.xyz, \
+  -i testbed-manager, \
   --vault-password-file /opt/configuration/environments/.vault_pass \
   /opt/configuration/ansible/manager-part-3.yml
 
@@ -58,37 +57,43 @@ wait_for_container_healthy 60 kolla-ansible
 wait_for_container_healthy 60 osism-ansible
 
 # disable ara service
-if [[ -e /etc/osism-ci-image || "$ARA" == "false" ]]; then
+if [[ "$IS_ZUUL" == "true" || "$ARA" == "false" ]]; then
     sh -c '/opt/configuration/scripts/disable-ara.sh'
+fi
+
+# initialize netbox
+if [[ $(semver $MANAGER_VERSION 8.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
+    wait_for_container_healthy 60 netbox-netbox-1
+    /opt/configuration/scripts/bootstrap/000-netbox.sh
 fi
 
 docker compose --project-directory /opt/manager ps
 docker compose --project-directory /opt/netbox ps
 
 # use osism.commons.still_alive stdout callback
-if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]?$ || $MANAGER_VERSION == "latest" ]]; then
+if [[ $(semver $MANAGER_VERSION 7.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
     # The plugin is available in OSISM >= 7.0.0 and higher. In future, the callback
     # plugin will be used by default.
     sed -i "s/community.general.yaml/osism.commons.still_alive/" /opt/configuration/environments/ansible.cfg
 fi
 
+osism apply resolvconf -l testbed-manager
 osism apply sshconfig
 osism apply known-hosts
 
-if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]?$ || $MANAGER_VERSION == "latest" ]]; then
-    # The Nexus service is only really operational again from OSISM 6.1.0.
+if [[ $(semver $MANAGER_VERSION 7.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
     osism apply nexus
 
-    if [[ -e /etc/osism-ci-image ]]; then
+    if [[ "$IS_ZUUL" == "true" ]]; then
         sh -c '/opt/configuration/scripts/set-docker-registry.sh nexus.testbed.osism.xyz:8193'
-	sed -i "s/docker_namespace: osism/docker_namespace: kolla/" /opt/configuration/environments/kolla/configuration.yml
+	if [[ $MANAGER_VERSION == "latest" ]]; then
+	    sed -i "s/docker_namespace: osism/docker_namespace: kolla/" /opt/configuration/inventory/group_vars/all/kolla.yml
+	else
+	    sed -i "s#docker_namespace: osism#docker_namespace: kolla/release#" /opt/configuration/inventory/group_vars/all/kolla.yml
+	fi
     else
         sh -c '/opt/configuration/scripts/set-docker-registry.sh nexus.testbed.osism.xyz:8192'
     fi
 fi
 
 osism apply squid
-
-# Ensure that the squid service is up and running.
-# This is also added to the osism.services.squid role.
-docker compose --project-directory /opt/squid up -d

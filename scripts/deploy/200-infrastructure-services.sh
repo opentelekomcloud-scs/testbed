@@ -2,8 +2,8 @@
 set -e
 
 source /opt/configuration/scripts/include.sh
+source /opt/configuration/scripts/manager-version.sh
 
-MANAGER_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.version"}}' osism-ansible)
 OPENSTACK_VERSION=$(docker inspect --format '{{ index .Config.Labels "de.osism.release.openstack" }}' kolla-ansible)
 
 osism apply common
@@ -17,7 +17,7 @@ osism apply openvswitch
 osism apply ovn
 
 # In OSISM >= 5.0.0, the switch was made from Elasticsearch / Kibana to Opensearch.
-if [[ $MANAGER_VERSION =~ ^4\.[0-9]\.[0-9]$ || $OPENSTACK_VERSION == "yoga" ]]; then
+if [[ ( $(semver $MANAGER_VERSION 5.0.0) -eq -1 && $MANAGER_VERSION != "latest" ) || $OPENSTACK_VERSION == "yoga" ]]; then
     osism apply elasticsearch
     if [[ "$TEMPEST" == "false" ]]; then
         osism apply kibana

@@ -1,10 +1,5 @@
 ---
 ##########################################################
-# docker
-
-docker_namespace: osism
-
-##########################################################
 # loadbalancer
 
 kolla_internal_vip_address: 192.168.16.9
@@ -84,8 +79,8 @@ ironic_cleaning_network: "public"
 
 # ceilometer
 enable_ceilometer_prometheus_pushgateway: "yes"
-ceilometer_prometheus_pushgateway_host: "testbed-manager.testbed.osism.xyz"
-ceilometer_metering_pushgateway_host: "testbed-manager.testbed.osism.xyz"
+ceilometer_prometheus_pushgateway_host: "testbed-manager"
+ceilometer_metering_pushgateway_host: "testbed-manager"
 ceilometer_metering_pushgateway_port: 8088
 
 # rgw integration
@@ -96,21 +91,8 @@ enable_ceph_rgw_keystone: true
 ceph_rgw_swift_compatibility: false
 ceph_rgw_swift_account_in_url: true
 
-ceph_rgw_hosts:
-  - host: testbed-node-0
-    ip: 192.168.16.10
-    port: 8081
-  - host: testbed-node-1
-    ip: 192.168.16.11
-    port: 8081
-  - host: testbed-node-2
-    ip: 192.168.16.12
-    port: 8081
-
 ##########################################################
 # external ceph
-
-enable_ceph: "no"
 
 cinder_backend_ceph: "yes"
 glance_backend_ceph: "yes"
@@ -136,8 +118,5 @@ prometheus_external_labels:
 ##########################################################
 # other
 
-# This is a workaround for the missings in the defaults of the 4.2.0 release.
-# The parameter is required at this point so that the 4.2.0 release can be used
-# with the testbed.
 om_enable_rabbitmq_high_availability: false
-external_ceph_always_copy_cinder_keyring: "no"
+om_enable_rabbitmq_quorum_queues: false

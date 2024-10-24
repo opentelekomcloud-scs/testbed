@@ -9,12 +9,12 @@ IMAGE_USERNAME ?= ubuntu
 
 VERSION_CEPH ?= quincy
 VERSION_MANAGER ?= latest
-VERSION_OPENSTACK ?= 2023.2
+VERSION_OPENSTACK ?= 2024.1
 
 CEPH_STACK ?= ceph-ansible
 
 # renovate: datasource=github-releases depName=opentofu/opentofu
-TOFU_VERSION ?= 1.8.1
+TOFU_VERSION ?= 1.8.3
 TERRAFORM ?= tofu
 TERRAFORM_BLUEPRINT ?= testbed-default
 

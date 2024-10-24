@@ -12,7 +12,7 @@ echo
 
 export MANAGER_VERSION=${1:-latest}
 CEPH_VERSION=${2:-quincy}
-OPENSTACK_VERSION=${3:-2023.2}
+OPENSTACK_VERSION=${3:-2024.1}
 KOLLA_NAMESPACE=${4:-osism}
 
 /opt/configuration/scripts/set-manager-version.sh $MANAGER_VERSION
@@ -32,7 +32,7 @@ fi
 sh -c '/opt/configuration/scripts/sync-configuration-repository.sh'
 
 # enable new kubernetes service
-if [[ $OLD_MANAGER_VERSION =~ ^6\.[0-9]\.[0-9]?$ ]]; then
+if [[ $(semver $OLD_MANAGER_VERSION 6.0.0) -ge 0 ]]; then
     echo "enable_osism_kubernetes: true" >> /opt/configuration/environments/manager/configuration.yml
 fi
 
@@ -50,7 +50,7 @@ docker compose --project-directory /opt/manager ps
 docker compose --project-directory /opt/netbox ps
 
 # disable ara service
-if [[ -e /etc/osism-ci-image || "$ARA" == "false" ]]; then
+if [[ "$IS_ZUUL" == "true" || "$ARA" == "false" ]]; then
     sh -c '/opt/configuration/scripts/disable-ara.sh'
 fi
 

@@ -1,6 +1,6 @@
 ---
 - name: Copy custom facts
-  hosts: testbed-manager.testbed.osism.xyz
+  hosts: testbed-manager
   connection: local
   gather_facts: false
 
@@ -31,7 +31,7 @@
 # subsequent roles (traefik, manager, netbox). This makes problems resulting
 # from image pulls more visible in the CI.
 - name: Before the deployment of the manager
-  hosts: testbed-manager.testbed.osism.xyz
+  hosts: testbed-manager
   connection: local
 
   vars:
@@ -54,6 +54,7 @@
       - "{{ vault_image }}"
 
   vars_files:
+    - /opt/configuration/inventory/group_vars/all/registries.yml
     - /opt/configuration/environments/manager/configuration.yml
     - /opt/configuration/environments/configuration.yml
     - /opt/configuration/environments/manager/images.yml
@@ -79,26 +80,21 @@
       retries: 120
       delay: 10
 
-    - name: Check if /etc/osism-ci-image exist
-      ansible.builtin.stat:
-        path: /etc/osism-ci-image
-      register: result
+    - name: Get /opt/manager-vars.sh
+      ansible.builtin.set_fact:
+        manager_vars: "{{ lookup('file', '/opt/manager-vars.sh') }}"
 
     - name: Add ara_server_mariadb_volume_type parameter
       ansible.builtin.lineinfile:
         path: /opt/configuration/environments/manager/configuration.yml
         line: "ara_server_mariadb_volume_type: tmpfs"
-      when:
-        - result.stat.exists is defined
-        - result.stat.exists | bool
+      when: "'export IS_ZUUL=true' in manager_vars"
 
     - name: Add netbox_postgres_volume_type parameter
       ansible.builtin.lineinfile:
         path: /opt/configuration/environments/infrastructure/configuration.yml
         line: "netbox_postgres_volume_type: tmpfs"
-      when:
-        - result.stat.exists is defined
-        - result.stat.exists | bool
+      when: "'export IS_ZUUL=true' in manager_vars"
 
     # The correct package name is linux-generic-hwe-22.04 on Ubuntu 22.04
     # and linux-generic-hwe-24.04 on Ubuntu 24.04.
@@ -111,7 +107,7 @@
     # Looks like it is not possible to use Nexus with authentication with Podman.
     - name: Do not use Nexus for Ceph on CentOS
       ansible.builtin.lineinfile:
-        path: /opt/configuration/environments/configuration.yml
+        path: /opt/configuration/inventory/group_vars/all/registries.yml
         line: "ceph_docker_registry: nexus.testbed.osism.xyz:8192"
         state: absent
       when: ansible_os_family == "RedHat"
@@ -148,7 +144,7 @@
         - result.stat.exists | bool
 
 - name: Apply role traefik & netbox
-  hosts: testbed-manager.testbed.osism.xyz
+  hosts: testbed-manager
   connection: local
 
   vars:
@@ -156,8 +152,9 @@
     ansible_python_interpreter: "{{ venv_path }}/bin/python3"
 
   vars_files:
+    - /opt/configuration/inventory/group_vars/all/registries.yml
     - /opt/configuration/inventory/group_vars/testbed-managers.yml
-    - /opt/configuration/inventory/host_vars/testbed-manager.testbed.osism.xyz/vars.yml
+    - /opt/configuration/inventory/host_vars/testbed-manager/vars.yml
     - /opt/configuration/environments/manager/configuration.yml
     - /opt/configuration/environments/manager/images.yml
     - /opt/configuration/environments/manager/secrets.yml
@@ -186,7 +183,7 @@
           changed_when: true
 
 - name: Deploy manager service
-  hosts: testbed-manager.testbed.osism.xyz
+  hosts: testbed-manager
   connection: local
 
   vars:
@@ -196,8 +193,9 @@
     manager_service_restart: false
 
   vars_files:
+    - /opt/configuration/inventory/group_vars/all/registries.yml
     - /opt/configuration/inventory/group_vars/testbed-managers.yml
-    - /opt/configuration/inventory/host_vars/testbed-manager.testbed.osism.xyz/vars.yml
+    - /opt/configuration/inventory/host_vars/testbed-manager/vars.yml
     - /opt/configuration/environments/manager/configuration.yml
     - /opt/configuration/environments/manager/images.yml
     - /opt/configuration/environments/manager/secrets.yml

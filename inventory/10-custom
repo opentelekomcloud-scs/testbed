@@ -2,22 +2,28 @@
 # custom host groups
 
 [testbed-managers]
-testbed-manager.testbed.osism.xyz
+testbed-manager
 
-[testbed-primary-nodes]
-testbed-node-0.testbed.osism.xyz
-testbed-node-1.testbed.osism.xyz
-testbed-node-2.testbed.osism.xyz
+[testbed-control-nodes]
+testbed-node-0
+testbed-node-1
+testbed-node-2
 
-[testbed-secondary-nodes]
-#testbed-node-3.testbed.osism.xyz
-#testbed-node-4.testbed.osism.xyz
-#testbed-node-5.testbed.osism.xyz
-#testbed-node-6.testbed.osism.xyz
-#testbed-node-7.testbed.osism.xyz
-#testbed-node-8.testbed.osism.xyz
-#testbed-node-9.testbed.osism.xyz
+[testbed-resource-nodes]
+#testbed-node-0
+#testbed-node-1
+#testbed-node-2
+#testbed-node-3
+#testbed-node-4
+#testbed-node-5
+#testbed-node-6
+#testbed-node-7
+#testbed-node-8
+#testbed-node-9
+
+[testbed-external-nodes]
 
 [testbed-nodes:children]
-testbed-primary-nodes
-testbed-secondary-nodes
+testbed-external-nodes
+testbed-control-nodes
+testbed-resource-nodes

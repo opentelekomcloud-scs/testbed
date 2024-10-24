@@ -3,13 +3,14 @@ set -x
 set -e
 
 source /opt/configuration/scripts/include.sh
-
-MANAGER_VERSION=$(docker inspect --format '{{ index .Config.Labels "org.opencontainers.image.version"}}' osism-ansible)
+source /opt/configuration/scripts/manager-version.sh
 
 # Do not use the Keystone/Keycloak integration by default. We only use this integration
 # in a special identity testbed.
-rm -f /opt/configuration/environments/kolla/group_vars/keystone.yml
+rm -f /opt/configuration/environments/kolla/files/overlays/horizon/_9999-custom-settings.py
+rm -f /opt/configuration/environments/kolla/files/overlays/horizon/custom_local_settings
 rm -f /opt/configuration/environments/kolla/files/overlays/keystone/wsgi-keystone.conf
+rm -f /opt/configuration/environments/kolla/group_vars/keystone.yml
 rm -rf /opt/configuration/environments/kolla/files/overlays/keystone/federation
 
 osism apply -a upgrade keystone
@@ -29,22 +30,8 @@ osism apply -a upgrade aodh
 # In OSISM >= 7.0.0 the persistence feature in Octavia was enabled by default.
 # This requires an additional database, which is only created when Octavia play
 # is run in bootstrap mode first.
-if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]?$ || $MANAGER_VERSION == "latest" ]]; then
+if [[ $(semver $MANAGER_VERSION 7.0.0) -ge 0 || $MANAGER_VERSION == "latest" ]]; then
     osism apply -a bootstrap octavia
 fi
 
 osism apply -a upgrade octavia
-
-if [[ $MANAGER_VERSION =~ ^7\.[0-9]\.[0-9]?$ || $MANAGER_VERSION == "latest" ]]; then
-    osism apply clusterapi
-
-    # In the testbed, the service was only added with OSISM 7.0.0. It is therefore necessary
-    # to check in advance whether the service is already available. If not, a deployment must
-    # be carried out instead of an upgrade.
-
-    if [[ -z $(openstack --os-cloud admin service list -f value -c Name | grep magnum) ]]; then
-        osism apply magnum
-    else
-        osism apply -a upgrade magnum
-    fi
-fi

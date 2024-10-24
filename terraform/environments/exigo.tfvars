@@ -7,10 +7,12 @@
 # override:nodes_boot_from_volume
 flavor_manager            = "SCS-4V-16"
 flavor_node               = "SCS-8V-32"
-volume_type               = "ssd"
+volume_type               = "__DEFAULT__"
 image                     = "Ubuntu 22.04"
 image_node                = "Ubuntu 22.04"
-public                    = "public"
-availability_zone         = "nova"
-volume_availability_zone  = "nova"
+public                    = "PN-231"
+availability_zone         = "chur"
+volume_availability_zone  = "chur"
 network_availability_zone = "nova"
+volume_size_storage       = 100
+number_of_nodes           = 6

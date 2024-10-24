@@ -4,7 +4,7 @@
 
 ceph_version: quincy
 manager_version: latest
-openstack_version: 2023.2
+openstack_version: 2024.1
 
 ##########################
 # listener
@@ -48,9 +48,6 @@ netbox_enable: true
 netbox_host: netbox.testbed.osism.xyz
 netbox_traefik: true
 netbox_api_url: "https://{{ netbox_host }}"
-
-netbox_plugins_extra:
-  - netbox_bgp
 
 ##########################
 # opensearch

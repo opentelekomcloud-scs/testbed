@@ -27,7 +27,7 @@ homer_url_horizon: "https://api.testbed.osism.xyz/"
 homer_url_keycloak: "https://keycloak.testbed.osism.xyz/auth"
 homer_url_kibana: "https://api-int.testbed.osism.xyz:5601"
 homer_url_netbox: "https://netbox.testbed.osism.xyz"
-homer_url_netdata: "http://testbed-manager.testbed.osism.xyz:19999"
+homer_url_netdata: "http://testbed-manager:19999"
 homer_url_opensearch_dashboards: "https://api-int.testbed.osism.xyz:5601"
 homer_url_phpmyadmin: "https://phpmyadmin.testbed.osism.xyz/"
 homer_url_prometheus: "https://api-int.testbed.osism.xyz:9091/"
@@ -44,8 +44,9 @@ keycloak_host: keycloak.testbed.osism.xyz
 
 netbox_traefik: true
 netbox_host: netbox.testbed.osism.xyz
-netbox_plugins_extra:
-  - netbox_bgp
+
+# NOTE: netbox-1 takes some time to start on first run
+netbox_service_netbox_start_period: 300s
 
 ##########################
 # phpmyadmin
@@ -111,4 +112,5 @@ thanos_sidecar_prometheus_url: "https://api-int.testbed.osism.xyz:9091/"
 ##########################
 # k3s
 
-metal_lb_ip_range: "192.168.129.1-192.168.129.254"
+cilium_bgp: true
+cilium_bgp_lb_cidr: "172.31.252.0/23"

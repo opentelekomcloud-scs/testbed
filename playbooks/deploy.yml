@@ -42,25 +42,12 @@
         terragrunt_tfpath: "{{ ansible_user_dir }}/terraform"
       when: "'nodepool' in hostvars[groups['all'][0]]"
 
-    - name: Output CloudName
-      debug:
-        var: cloud
-  
-    - name: Output all vars
-      debug:
-        var: ansible_facts
-
-
     - name: Set facts (local deployment)
       ansible.builtin.set_fact:
         cloud: "{{ testbed_cloud | default('ci') }}"
         image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: terraform
       when: "'nodepool' not in hostvars[groups['all'][0]]"
-
-    - name: Debug _is_zuul value
-      ansible.builtin.debug:
-        msg: "Is Zuul deployment: {{ _is_zuul }}"
 
     - name: Debug all variables used in command
       ansible.builtin.debug:

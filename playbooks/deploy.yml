@@ -40,6 +40,8 @@
         cloud: "{{ cloud_envs[hostvars[groups['all'][0]]['nodepool']['label']] }}"
         image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: "{{ ansible_user_dir }}/terraform"
+        _is_zuul: true
+        autodetected_zuul_deploy: true
       when: "'nodepool' in hostvars[groups['all'][0]]"
 
     - name: Set facts (local deployment)
@@ -47,7 +49,29 @@
         cloud: "{{ testbed_cloud | default('ci') }}"
         image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: terraform
+        _is_zuul: false
+        autodetected_zuul_deploy: false
       when: "'nodepool' not in hostvars[groups['all'][0]]"
+
+    - name: debug autodetection working
+      debug:
+        var: autodetected_zuul_deploy
+
+
+    - name: Debug all variables used in command
+      ansible.builtin.debug:
+        msg: >
+          Environment: ci-{{ _terraform_environment }}
+          Cloud: {{ cloud }}
+          Image Username: {{ image_username }}
+          Terraform Binary: {{ terraform_binary }}
+          Version Ceph: {{ _ceph_version }}
+          Version Manager: {{ _manager_version }}
+          Version OpenStack: {{ _openstack_version }}
+          Tempest: {{ _tempest | lower }}
+          Is Zuul: {{ _is_zuul | lower }}
+          Ceph Stack: {{ _ceph_stack }}
+          Terragrunt Path: {{ terragrunt_tfpath }}
 
     - name: Create infrastructure (latest)
       ansible.builtin.command:

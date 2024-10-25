@@ -114,3 +114,9 @@ thanos_sidecar_prometheus_url: "https://api-int.testbed.osism.xyz:9091/"
 
 cilium_bgp: true
 cilium_bgp_lb_cidr: "172.31.252.0/23"
+
+##########################
+# netbox
+
+netbox_service_netbox_worker_start_period: "60s"
+netbox_service_netbox_start_period: "240s"

@@ -26,6 +26,47 @@
         cloud: "{{ testbed_cloud | default('ci') }}"
       when: "'nodepool' not in hostvars[groups['all'][0]]"
 
+    - name: Install python-openstackclient and openstacksdk in ~/venv
+      ansible.builtin.pip:
+        name:
+          - python-openstackclient
+          - openstacksdk
+        virtualenv: ~/venv
+        virtualenv_python: python3
+
+    - name: ensure /etc/openstack ecistsi
+      ansible.builtin.file:
+        path: /etc/openstack
+        state: directory 
+        mode: '0755'
+      become: true
+  
+    - name: Write clouds.yaml file
+      ansible.builtin.copy:
+        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
+        dest: "{{ terraform_path }}/clouds.yaml"
+        mode: 0600
+
+    - name: Write clouds-public.yaml file
+      ansible.builtin.copy:
+        content: "{{ secret.PUBLICCLOUDS }}"
+        dest: "{{ terraform_path }}/clouds-public.yaml"
+        mode: 0600
+
+    - name: Write clouds.yaml file to openstack
+      ansible.builtin.copy:
+        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
+        dest: "/etc/openstack/clouds.yaml"
+        mode: 0600
+      become: true
+
+    - name: Write clouds-public.yaml file to openstack
+      ansible.builtin.copy:
+        content: "{{ secret.PUBLICCLOUDS }}"
+        dest: "/etc/openstack/clouds-public.yaml"
+        mode: 0600
+      become: true
+ 
     - name: Clean the cloud environment
       ansible.builtin.shell:
         cmd: |
@@ -65,3 +106,4 @@
         src: local.env.j2
         dest: "{{ terraform_path }}/local.env"
         mode: "0644"
+

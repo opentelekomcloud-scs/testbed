@@ -14,6 +14,6 @@ repositories:
     repo: https://github.com/osism/terraform-base
     branch: main
   testbed:
-    path: github.com/osism/testbed
-    repo: https://github.com/osism/testbed
+    path: github.com/opentelekomcloud-scs/testbed
+    repo: https://github.com/opentelekomcloud-scs/testbed
     branch: main

@@ -3,3 +3,7 @@
 # environment to be used.
 cloud_envs:
   testbed-orchestrator: ci
+  testbed-orchestrator-pco: pluscloudopen
+  testbed-orchestrator-cleura: cleura
+  testbed-orchestrator-wavecon: wavestack
+  ubuntu-jammy: otc

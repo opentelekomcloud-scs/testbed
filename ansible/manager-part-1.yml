@@ -5,7 +5,7 @@
   vars:
     ansible_ssh_user: dragon
     operator_user: dragon
-    repo: osism/testbed
+    repo: opentelekomcloud-scs/testbed
     version_manager: latest
 
     venv_path: /opt/venv
@@ -68,7 +68,7 @@
       become: true
       become_user: dragon
       ansible.posix.synchronize:
-        src: "{{ repo_path }}/{{ repo }}/"
+        src: "{{ repo_path }}/opentelekomcloud-scs/testbed/"
         delete: true
         dest: /opt/configuration
 

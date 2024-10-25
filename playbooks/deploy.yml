@@ -45,6 +45,11 @@
     - name: Output CloudName
       debug:
         var: cloud
+  
+    - name: Output all vars
+      debug:
+        var: ansible_facts
+
 
     - name: Set facts (local deployment)
       ansible.builtin.set_fact:

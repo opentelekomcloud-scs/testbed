@@ -53,13 +53,14 @@
         dest: "{{ terraform_path }}/clouds-public.yaml"
         mode: 0600
 
-    - name: Write clouds.yaml file
+    - name: Write clouds.yaml file to openstack
       ansible.builtin.copy:
         content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
         dest: "/etc/openstack/clouds.yaml"
         mode: 0600
       become: true
-    - name: Write clouds-public.yaml file
+
+    - name: Write clouds-public.yaml file to openstack
       ansible.builtin.copy:
         content: "{{ secret.PUBLICCLOUDS }}"
         dest: "/etc/openstack/clouds-public.yaml"

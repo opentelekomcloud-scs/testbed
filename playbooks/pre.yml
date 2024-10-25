@@ -26,11 +26,13 @@
         cloud: "{{ testbed_cloud | default('ci') }}"
       when: "'nodepool' not in hostvars[groups['all'][0]]"
 
-    - name: Install python-openstackclient package
+    - name: Install python-openstackclient and openstacksdk in ~/venv
       ansible.builtin.pip:
-        name: 
+        name:
           - python-openstackclient
           - openstacksdk
+        virtualenv: ~/venv
+        virtualenv_python: python3
 
     - name: Clean the cloud environment
       ansible.builtin.shell:

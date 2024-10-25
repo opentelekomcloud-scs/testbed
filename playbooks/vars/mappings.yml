@@ -12,4 +12,4 @@ image_usernames:
   ubuntu-24.04: ubuntu
   debian-12: debian
   centos-stream-9: cloud-user
-  ci-otc: ubuntu
+  otc: ubuntu

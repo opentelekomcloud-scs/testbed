@@ -40,6 +40,8 @@
         cloud: "{{ cloud_envs[hostvars[groups['all'][0]]['nodepool']['label']] }}"
         image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: "{{ ansible_user_dir }}/terraform"
+        _is_zuul: true
+        autodetected_zuul_deploy: true
       when: "'nodepool' in hostvars[groups['all'][0]]"
 
     - name: Set facts (local deployment)
@@ -47,7 +49,14 @@
         cloud: "{{ testbed_cloud | default('ci') }}"
         image_username: "{{ image_usernames[_terraform_environment] | default('ubuntu') }}"
         terragrunt_tfpath: terraform
+        _is_zuul: true
+        autodetected_zuul_deploy: false
       when: "'nodepool' not in hostvars[groups['all'][0]]"
+
+    - name: debug autodetection working
+      debug:
+        var: autodetected_zuul_deploy
+
 
     - name: Debug all variables used in command
       ansible.builtin.debug:

@@ -65,7 +65,17 @@
         dest: "/etc/openstack/clouds-public.yaml"
         mode: 0600
       become: true
-      
+
+    - name: Read /etc/openstack/clouds.yaml
+      ansible.builtin.slurp:
+        src: /etc/openstack/clouds.yaml
+      register: clouds_yaml_content
+      become: true
+
+    - name: Display content of clouds.yaml
+      ansible.builtin.debug:
+        msg: "{{ clouds_yaml_content['content'] | b64decode }}"
+      become: true    
   
     - name: Clean the cloud environment
       ansible.builtin.shell:

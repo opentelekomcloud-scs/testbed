@@ -42,6 +42,10 @@
         terragrunt_tfpath: "{{ ansible_user_dir }}/terraform"
       when: "'nodepool' in hostvars[groups['all'][0]]"
 
+    - name: Output CloudName
+      debug:
+        var: cloud
+
     - name: Set facts (local deployment)
       ansible.builtin.set_fact:
         cloud: "{{ testbed_cloud | default('ci') }}"

@@ -34,6 +34,18 @@
         virtualenv: ~/venv
         virtualenv_python: python3
 
+    - name: Write clouds.yaml file
+      ansible.builtin.copy:
+        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
+        dest: "{{ terraform_path }}/clouds.yaml"
+        mode: 0600
+
+    - name: Write clouds-public.yaml file
+      ansible.builtin.copy:
+        content: "{{ secret.PUBLICCLOUDS }}"
+        dest: "{{ terraform_path }}/clouds-public.yaml"
+        mode: 0600
+  
     - name: Clean the cloud environment
       ansible.builtin.shell:
         cmd: |
@@ -74,14 +86,3 @@
         dest: "{{ terraform_path }}/local.env"
         mode: "0644"
 
-    - name: Write clouds.yaml file
-      ansible.builtin.copy:
-        content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
-        dest: "{{ terraform_path }}/clouds.yaml"
-        mode: 0600
-
-    - name: Write clouds-public.yaml file
-      ansible.builtin.copy:
-        content: "{{ secret.PUBLICCLOUDS }}"
-        dest: "{{ terraform_path }}/clouds-public.yaml"
-        mode: 0600

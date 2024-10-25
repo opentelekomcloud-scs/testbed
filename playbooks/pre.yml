@@ -38,6 +38,8 @@
       ansible.builtin.file:
         path: /etc/openstack
         state: directory 
+        mode: '0755'
+      become: true
   
     - name: Write clouds.yaml file
       ansible.builtin.copy:

@@ -58,12 +58,13 @@
         content: "{{ secret.MANAGERLESS_CREDENTIALS }}"
         dest: "/etc/openstack/clouds.yaml"
         mode: 0600
-
+      become: true
     - name: Write clouds-public.yaml file
       ansible.builtin.copy:
         content: "{{ secret.PUBLICCLOUDS }}"
         dest: "/etc/openstack/clouds-public.yaml"
         mode: 0600
+      become: true
       
   
     - name: Clean the cloud environment

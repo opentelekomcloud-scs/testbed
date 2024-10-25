@@ -22,3 +22,4 @@ public                    = "admin_external_net"
 dns_nameservers           = ["9.9.9.9"]
 number_of_volumes         = "0"
 external_api              = true
+is_zuul                   = true

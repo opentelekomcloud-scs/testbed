@@ -26,6 +26,10 @@
         cloud: "{{ testbed_cloud | default('ci') }}"
       when: "'nodepool' not in hostvars[groups['all'][0]]"
 
+    - name: Install bottle python package
+      ansible.builtin.pip:
+        name: openstack
+
     - name: Clean the cloud environment
       ansible.builtin.shell:
         cmd: |

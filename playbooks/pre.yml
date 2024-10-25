@@ -28,7 +28,9 @@
 
     - name: Install python-openstackclient package
       ansible.builtin.pip:
-        name: python-openstackclient
+        name: 
+          - python-openstackclient
+          - openstacksdk
 
     - name: Clean the cloud environment
       ansible.builtin.shell:
